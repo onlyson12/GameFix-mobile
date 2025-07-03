@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  
+  
+  <script data-auto='250/4.2/400/400/0' data-sdk='show_9454683' data-zone='9454683' src='https://libtl.com/sdk.js'>
+</script>
+<script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9519732,document.createElement('script'))</script>
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>GameFix Pro v18 - Simulasi Offerwall</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src='//libtl.com/sdk.js' data-zone='9454683' data-sdk='show_9454683'></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <link rel="stylesheet" href="css/GameFix.css">
+</head>
+
+<body class="bg-[#1A1A2E] flex flex-col min-h-screen justify-between">
+
+    <div id="auth-container" class="auth-container-wrapper">
+        
+        <div id="login-form" class="container">
+            <div class="login-logo-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiZMDEWYDADKK_rexYI2026IJU-vCSTN6Xwr0EHOZIMnwmnk-5QilqjQmf79IxUdfEr6vFxXT7E5jEN1bVyLWPsrEHj9luWFp-YRW4prVTsWVdYJQwx9vXJUM3i8N537_fJUbp187MPUDgn4Y2hsR3NUYDu2cH1DQp1lfdDOEaxeJh9JD8y6AJY2FlHNM/s320/Gemini_Generated_Image_slug5kslug5kslug.png" alt="Logo Aplikasi">
+            </div>
+            <h1 class="text-2xl font-bold mb-6">Selamat Datang</h1>
+            <div class="input-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+            <button class="button primary" onclick="handleEmailLogin()">Masuk</button>
+            <button class="button google" onclick="handleGoogleLogin()">
+                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google logo"> Masuk dengan Google
+            </button>
+            <p class="switch-link" onclick="toggleAuthForms()">Belum punya akun? <span class="font-bold text-purple-400">Daftar</span></p>
+        </div>
+
+        <div id="register-form" class="container" style="display:none;">
+            <div class="login-logo-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiZMDEWYDADKK_rexYI2026IJU-vCSTN6Xwr0EHOZIMnwmnk-5QilqjQmf79IxUdfEr6vFxXT7E5jEN1bVyLWPsrEHj9luWFp-YRW4prVTsWVdYJQwx9vXJUM3i8N537_fJUbp187MPUDgn4Y2hsR3NUYDu2cH1DQp1lfdDOEaxeJh9JD8y6AJY2FlHNM/s320/Gemini_Generated_Image_slug5kslug5kslug.png" alt="Logo Aplikasi">
+            </div>
+            <h1 class="text-2xl font-bold mb-6">Buat Akun Baru</h1>
+            <div class="input-group">
+                <label for="registerUsername">Username</label>
+                <input type="text" id="registerUsername" placeholder="Username Anda" required>
+            </div>
+            <div class="input-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" placeholder="you@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Minimal 6 karakter" required>
+            </div>
+          <div class="input-group">
+
+    <label for="registerReferralCode">Kode Referral (Opsional)</label>
+
+    <input type="text" id="registerReferralCode" placeholder="Masukkan kode dari teman">
+
+</div>
+            <button class="button primary" onclick="handleEmailRegister()">Daftar</button>
+            <p class="switch-link" onclick="toggleAuthForms()">Sudah punya akun? <span class="font-bold text-purple-400">Masuk</span></p>
+        </div>
+    </div>
+
+    <div id="telegram-login-container" style="display:none;">
+        <div class="container">
+            <div class="login-logo-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiZMDEWYDADKK_rexYI2026IJU-vCSTN6Xwr0EHOZIMnwmnk-5QilqjQmf79IxUdfEr6vFxXT7E5jEN1bVyLWPsrEHj9luWFp-YRW4prVTsWVdYJQwx9vXJUM3i8N537_fJUbp187MPUDgn4Y2hsR3NUYDu2cH1DQp1lfdDOEaxeJh9JD8y6AJY2FlHNM/s320/Gemini_Generated_Image_slug5kslug5kslug.png" alt="Logo Aplikasi">
+            </div>
+            <h1 id="login-message-header" class="text-2xl font-bold mb-4">Akses Ditolak</h1>
+            <p id="login-message-text" class="text-gray-300">Aplikasi ini hanya dapat diakses melalui bot Telegram <a href="https://t.me/gamefixpro_bot" target="_blank" class="text-purple-400">@gamefixpro_bot</a>. Silakan buka kembali dari bot.</p>
+        </div>
+    </div>
+
+
+    <div id="dashboard" class="dashboard-container" style="display: none;">
+        <div class="header-baru">
+    <div class="header-baru-baris-atas">
+        <div class="header-baru-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="header-baru-username">
+            <span id="headerBaruUsername">Memuat...</span>
+        </div>
+        <div class="header-baru-notif" onclick="showNotificationPopup()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notif-badge-header-baru"></span>
+        </div>
+    </div>
+    <div class="header-baru-baris-bawah">
+        <div class="header-baru-stat">
+            <span class="label">Level EXP:</span>
+            <span id="headerBaruLevel">Lv. 1</span>
+        </div>
+        <div class="header-baru-stat">
+            <span class="label">Uang Ku:</span>
+            <span id="headerBaruCoins">Rp.0</span>
+        </div>
+    </div>
+</div>
+        
+        
+        <div class="ads-container">
+    <div class="ad-slider-inner" id="adSliderInner">
+        </div>
+    <button class="slider-nav-button prev" onclick="moveSlide(-1)">❮</button>
+    <button class="slider-nav-button next" onclick="moveSlide(1)">❯</button>
+    <div class="slider-dots" id="sliderDots"></div>
+</div>
+        
+        <h2>Game Pilihan Terbaik</h2>
+        <div class="game-list" id="game-list-container">
+            <div class="skeleton-loader"></div>
+            <div class="skeleton-loader"></div>
+            <div class="skeleton-loader"></div>
+        </div>
+    </div>
+    
+    <div id="game-iframe-wrapper" class="game-iframe-wrapper">
+        <div class="game-iframe-header">
+            <button onclick="closeGameIframe()"><i class="fas fa-arrow-left"></i></button>
+            <span id="game-iframe-title"></span>
+            <span id="game-timer-display" class="ml-auto font-mono text-lg"></span>
+        </div>
+        <iframe id="game-iframe" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="container-feature" id="tugas-container">
+        <main>
+            <div class="feature-inner-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h1 class="text-white text-lg font-semibold leading-tight">Check-in Harian</h1>
+                        <p class="text-gray-400 text-sm mt-1 max-w-[70%] leading-snug">Masuk setiap hari untuk mendapatkan bonus</p>
+                    </div>
+                    <i class="fas fa-calendar-check text-2xl text-white opacity-70"></i>
+                </div>
+                <div class="flex justify-around items-center mb-6">
+                    <div class="flex flex-col items-center space-y-1 checkin-day-item"><div class="w-10 h-10 rounded-full bg-[#5A6470] flex items-center justify-center text-white text-base font-normal" data-day="1">1</div><span class="text-gray-400 text-xs">Hari 1</span><i class="fas fa-check checkbox-icon"></i></div>
+                    <div class="flex flex-col items-center space-y-1 checkin-day-item"><div class="w-10 h-10 rounded-full bg-[#5A6470] flex items-center justify-center text-white text-base font-normal" data-day="2">2</div><span class="text-gray-400 text-xs">Hari 2</span><i class="fas fa-check checkbox-icon"></i></div>
+                    <div class="flex flex-col items-center space-y-1 checkin-day-item"><div class="w-10 h-10 rounded-full bg-[#5A6470] flex items-center justify-center text-white text-base font-normal" data-day="3">3</div><span class="text-gray-400 text-xs">Hari 3</span><i class="fas fa-check checkbox-icon"></i></div>
+                    <div class="flex flex-col items-center space-y-1 checkin-day-item"><div class="w-10 h-10 rounded-full bg-[#5A6470] flex items-center justify-center text-white text-base font-normal" data-day="4">4</div><span class="text-gray-400 text-xs">Hari 4</span><i class="fas fa-check checkbox-icon"></i></div>
+                    <div class="flex flex-col items-center space-y-1 checkin-day-item"><div class="w-10 h-10 rounded-full bg-[#5A6470] flex items-center justify-center text-white text-base font-normal" data-day="5">5</div><span class="text-gray-400 text-xs">Hari 5</span><i class="fas fa-check checkbox-icon"></i></div>
+                </div>
+                <button class="w-full py-2 rounded-lg text-white font-semibold text-sm bg-gradient-to-r from-purple-600 to-pink-500" type="button" onclick="claimDailyReward()" id="claimDailyRewardButton">Klaim Reward Hari ke-1 (+Rp.100)</button>
+                <p class="text-gray-400 text-center text-xs mt-3" id="checkinStreakText">Streak: 0 hari berturut-turut</p>
+            </div>
+            
+            <div class="feature-inner-card">
+                <h2 class="text-white text-lg font-semibold leading-tight mb-4">Tugas Lainnya</h2>
+                <div id="other-tasks-list" class="other-tasks-container">
+                    <div class="skeleton-loader"></div>
+                    <div class="skeleton-loader"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="container-feature" id="offerwall-container">
+        <main class="w-full flex-grow flex flex-col items-center p-4">
+            <div class="w-full max-w-md text-left mb-6">
+                <button class="text-white font-bold text-lg mb-4" onclick="showSection('tugas-container')"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Tugas</button>
+                <h1 class="text-white text-3xl font-bold">Dinding Penawaran</h1>
+                <p class="text-gray-400 mt-2">Selesaikan tugas dari partner kami untuk mendapatkan hadiah instan. Hadiah akan langsung ditambahkan ke akun Anda setelah tugas diverifikasi.</p>
+            </div>
+            <div id="offerwall-list-container" class="w-full max-w-md space-y-4">
+                </div>
+        </main>
+    </div>
+
+    <div class="container-feature" id="tarik-container">
+        <main class="flex-grow flex items-center justify-center p-4 w-full">
+            <div id="tarik-content-container" class="w-full max-w-md">
+                </div>
+        </main>
+    </div>
+    
+    <div class="container-feature" id="riwayat-container">
+        <main class="w-full flex-grow flex flex-col items-center p-4">
+            <h1 class="text-white text-2xl font-bold mb-6">Riwayat Transaksi</h1>
+            <div id="history-list-container" class="history-list w-full">
+                </div>
+        </main>
+    </div>
+    
+    <div class="container-feature" id="peringkat-container">
+        <main class="w-full flex-grow flex flex-col items-center">
+            <main class="w-full flex-grow flex flex-col items-center">
+    
+    <div id="podium-container">
+        </div>
+
+    <div class="leaderboard-tabs">
+        <div class="leaderboard-tab active" onclick="switchLeaderboardTab(this, 'dailyEarned')">Harian</div>
+        <div class="leaderboard-tab" onclick="switchLeaderboardTab(this, 'weeklyEarned')">Mingguan</div>
+        <div class="leaderboard-tab" onclick="switchLeaderboardTab(this, 'totalCoinsEarned')">Semua Waktu</div>
+    </div>
+
+    <h2 class="text-white text-xl font-semibold mt-6 mb-4">Peringkat Lainnya</h2>
+
+    <div id="leaderboard-list-container" class="leaderboard-list">
+         </div>
+
+    </main>
+            <div class="leaderboard-tabs">
+                <div class="leaderboard-tab active" onclick="switchLeaderboardTab(this, 'dailyEarned')">Harian</div>
+                <div class="leaderboard-tab" onclick="switchLeaderboardTab(this, 'weeklyEarned')">Mingguan</div>
+                <div class="leaderboard-tab" onclick="switchLeaderboardTab(this, 'totalCoinsEarned')">Semua Waktu</div>
+            </div>
+            <div id="leaderboard-list-container" class="leaderboard-list">
+                 </div>
+            <div id="current-user-rank-container" class="current-user-rank" style="display: none;">
+                 </div>
+        </main>
+    </div>
+    
+    <div class="container-feature" id="penarikan-riwayat-container">
+        <main class="w-full flex-grow flex flex-col items-center p-4">
+            <h1 class="text-white text-2xl font-bold mb-6">Riwayat Penarikan</h1>
+            <div id="withdrawal-history-list-container" class="history-list w-full">
+                 </div>
+            <button class="button secondary mt-6 w-full max-w-sm" onclick="showSection('profil-container')">Kembali ke Profil</button>
+        </main>
+    </div>
+
+    <div class="container-feature" id="profil-container">
+        <main class="flex-grow flex flex-col items-center pt-16 px-6 pb-24 w-full">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-r from-purple-700 to-pink-500 flex items-center justify-center mb-4">
+                <i class="fas fa-user text-[#2a7ac0] text-4xl"></i>
+            </div>
+            <h1 class="text-white text-xl font-semibold mb-1" id="profileUsername"></h1>
+            <p class="text-gray-400 text-sm mb-4" id="profileEmail"></p>
+            
+            <div class="progress-bar-container w-full max-w-md">
+                <div class="flex justify-between items-center mb-1 text-sm text-gray-400">
+                    <span id="profileLevel" class="font-bold">Level 1</span>
+                    <span id="profileXpProgress">0 / 100 XP</span>
+                </div>
+                <div class="xp-bar">
+                    <div id="profileXpBar" class="xp-bar-inner"></div>
+                </div>
+            </div>
+
+            <section id="referral-card">
+                <h2 class="text-white font-semibold text-lg">Undang Teman</h2>
+                <p class="text-gray-400 text-sm text-center mt-1">Undang teman dan dapatkan bonus untuk kalian berdua!</p>
+                <div class="referral-code-wrapper">
+                    <p>Kode Referal Anda</p>
+                    <h3 id="referral-code-display">Memuat...</h3>
+                </div>
+                <button class="button primary w-full mt-4" onclick="bagikanUndangan()">
+                    <i class="fas fa-share-alt mr-2"></i> Undang Teman 
+                </button>
+            </section>
+            
+            <section class="feature-inner-card w-full max-w-md">
+                <h2 class="text-white font-semibold text-lg mb-4">Pencapaian</h2>
+                <div id="achievement-gallery-container" class="achievement-gallery">
+                    </div>
+            </section>
+
+            <section class="profile-stat-card">
+                <h2 class="text-white font-semibold text-lg mb-6">Statistik</h2>
+                <div class="grid grid-cols-2 gap-y-6 text-center text-gray-300">
+                    <div><p class="text-white text-2xl font-semibold" id="statTotalGame">0</p><p class="text-sm mt-1">Total Game</p></div>
+                    <div><p class="text-white text-2xl font-semibold" id="statHariAktif">0</p><p class="text-sm mt-1">Hari Aktif</p></div>
+                    <div><p class="text-white text-2xl font-semibold" id="statTotalKoin">Rp.0</p><p class="text-sm mt-1">Total pendapatan</p></div>
+                    <div><p class="text-white text-2xl font-semibold" id="statKoinDitarik">Rp.0</p><p class="text-sm mt-1">Uang Yang Ditarik</p></div>
+                </div>
+            </section>
+            
+            <section id="payment-info-card" class="feature-inner-card w-full max-w-md mt-6">
+                </section>
+
+            <div id="action-buttons" class="w-full max-w-md mt-8 space-y-4">
+                </div>
+        </main>
+    </div>
+
+
+    <div id="payment-setup-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Atur Metode Penarikan</div>
+            <div class="popup-content text-left">
+                <div class="mb-4">
+                    <label class="block text-gray-300 text-sm font-semibold mb-2" for="popupPaymentMethod">Metode Pembayaran</label>
+                    <select class="w-full p-3 rounded-md bg-[#2C2B3F] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-600" id="popupPaymentMethod">
+                        <option value="">Pilih Metode</option>
+                        <option value="dana">DANA (min Rp.5000)</option>
+                        <option value="pulsa">Pulsa (min Rp.7000)</option>
+                        <option value="bca">BCA (min Rp.25.000)</option>
+                        <option value="bri">BRI (min Rp.25.000)</option>
+                        <option value="mandiri">Mandiri (min Rp.25.000)</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-300 text-sm font-semibold mb-2" for="popupAccountNumber">Nomor Telepon / Rekening</label>
+                    <input class="w-full p-3 rounded-md bg-[#2C2B3F] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-600" id="popupAccountNumber" placeholder="Contoh: 08123456789" type="tel">
+                </div>
+            </div>
+            <div class="popup-actions flex-col">
+                <button class="button primary w-full" onclick="savePaymentMethod()">Simpan</button>
+                <button class="button secondary w-full" onclick="closePaymentSetupPopup()">Batal</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="game-reward-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Reward Didapat!</div>
+            <div class="popup-content"><p>Anda mendapatkan <span id="reward-coins-amount">Rp.0</span>!</p></div>
+            <div class="popup-actions">
+                <button class="button primary" id="continuePlayingButton">Lanjut Bermain</button>
+                <button class="button secondary" id="returnToDashboardButton">Kembali ke Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="coin-earned-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Uang Didapat!</div>
+            <div class="popup-content"><p id="coin-earned-message"></p></div>
+            <div class="popup-actions"><button class="button primary" onclick="closeCoinEarnedPopup()">Oke</button></div>
+        </div>
+    </div>
+
+    <div id="custom-alert-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header" id="custom-alert-header">Pesan</div>
+            <div class="popup-content"><p id="custom-alert-message"></p></div>
+            <div class="popup-actions"><button class="button primary" onclick="closeCustomAlert()">Oke</button></div>
+        </div>
+    </div>
+
+    <div id="custom-confirm-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header" id="custom-confirm-header">Konfirmasi</div>
+            <div class="popup-content"><p id="custom-confirm-message"></p></div>
+            <div class="popup-actions">
+                <button class="button primary" id="custom-confirm-yes">Ya</button>
+                <button class="button secondary" id="custom-confirm-no">Tidak</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="withdrawal-success-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Penarikan Berhasil Diajukan!</div>
+            <div class="popup-content"><p>Penarikan akan diproses dalam jam kerja, minimal 1 sampai 3 hari.</p></div>
+            <div class="popup-actions"><button class="button primary" onclick="closeWithdrawalSuccessPopup()">Oke</button></div>
+        </div>
+    </div>
+    
+    <div id="referral-popup" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Bagikan Link Anda</div>
+            <div class="popup-content">
+                <p>Bagikan link di bawah ini ke teman Anda. Mereka akan otomatis terhubung dengan Anda saat mendaftar.</p>
+                <input type="text" id="referral-link-input" readonly>
+            </div>
+            <div class="popup-actions flex-col">
+                <button class="button primary w-full" onclick="copyReferralLink()">Salin Link</button>
+                <button class="button secondary w-full" onclick="closeReferralPopup()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="achievement-unlocked-popup" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Pencapaian Terbuka!</div>
+            <div class="popup-content">
+                <i id="unlocked-badge-icon" class="fas"></i>
+                <h3 id="unlocked-badge-title" class="text-xl font-bold text-white mb-2"></h3>
+                <p id="unlocked-badge-description" class="text-gray-300"></p>
+            </div>
+            <div class="popup-actions">
+                <button class="button primary" onclick="closeAchievementUnlockedPopup()">Luar Biasa!</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="announcement-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Pengumuman</div>
+            <div class="popup-content"><p id="announcement-message" class="text-left whitespace-pre-wrap"></p></div>
+            <div class="popup-actions"><button class="button primary" onclick="closeAnnouncementPopup()">Oke, Saya Mengerti</button></div>
+        </div>
+    </div>
+
+    <div id="notification-popup-overlay" class="overlay">
+        <div class="popup">
+            <div class="popup-header">Notifikasi</div>
+            <div class="popup-content" id="notification-list" style="max-height: 300px; overflow-y: auto; text-align: left; padding-right: 15px;"></div>
+            <div class="popup-actions"><button class="button secondary" onclick="closeNotificationPopup()">Tutup</button></div>
+        </div>
+    </div>
+    
+    <div id="maintenance-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(13, 17, 23, 0.95); z-index: 2000; color: white; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+        <i class="fas fa-tools text-5xl mb-4 text-yellow-400"></i>
+        <h1 class="text-2xl font-bold mb-2">Aplikasi Dalam Perbaikan</h1>
+        <p class="text-gray-300">Kami sedang melakukan pemeliharaan untuk meningkatkan layanan. Silakan kembali lagi nanti.</p>
+    </div>
+
+    <div id="ban-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(13, 17, 23, 0.95); z-index: 2000; color: white; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+        <i class="fas fa-user-slash text-5xl mb-4 text-red-500"></i>
+        <h1 class="text-2xl font-bold mb-2">Akses Diblokir</h1>
+        <p class="text-gray-300">Akun Anda telah diblokir. Silakan hubungi admin untuk informasi lebih lanjut.</p>
+    </div>
+
+
+    <nav class="bottom-nav" id="bottom-nav">
+    <div class="nav-item" id="nav-tugas" onclick="showSection('tugas-container')">
+        <i class="fas fa-clipboard-list"></i><span>Tugas</span>
+    </div>
+    <div class="nav-item" id="nav-peringkat" onclick="showSection('peringkat-container')">
+        <i class="fas fa-users"></i><span>Leaderboard</span>
+    </div>
+
+    <div class="nav-item-center" id="nav-dashboard" onclick="showSection('dashboard')">
+        <i class="fas fa-gamepad"></i>
+    </div>
+
+    <div class="nav-item" id="nav-tarik" onclick="showSection('tarik-container')">
+        <i class="fas fa-landmark"></i><span>Withdraw</span>
+    </div>
+    <div class="nav-item" id="nav-profil" onclick="showSection('profil-container')">
+        <i class="fas fa-user"></i><span>Profil</span>
+    </div>
+</nav>
+
+    <script defer src="js/GameFix.js"></script>
+</body>
+</html>
