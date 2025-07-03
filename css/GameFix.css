@@ -1,0 +1,1480 @@
+/* ====================================================================== */
+/* STYLESHEET CSS UTAMA                          */
+/* ====================================================================== */
+
+/* Variabel Warna Global (Root) untuk konsistensi tema */
+:root {
+    --primary-purple: #4c42ff;
+    --light-purple: #4c42ff;
+    --dark-purple: #4c42ff;
+    --text-color: white;
+    --button-background: #007BFF;
+    --button-hover-background: #0056b3;
+    --success-green: #28a745;
+    --warning-orange: #ffc107;
+    --danger-red: #dc3545;
+    --modern-bg-start: #31005f;
+    --modern-bg-end: #001f3f;
+    --glass-background: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --input-background: rgba(0, 0, 0, 0.35);
+    --input-border: rgba(255, 255, 255, 0.3);
+    --rank-gold: #FFD700;
+    --rank-silver: #C0C0C0;
+    --rank-bronze: #CD7F32;
+}
+    .input-group input::placeholder {
+
+color: rgba(255, 255, 255, 0.5); /* Membuat teks contoh menjadi putih transparan */
+
+opacity: 1; /* Diperlukan untuk beberapa browser */
+
+}
+
+/* Impor Font dari Google Fonts */
+@import url(https://fonts.googleapis.com/css2?family=Inter&display=swap);
+
+/* Gaya Dasar untuk Body */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, var(--modern-bg-start), var(--modern-bg-end));
+    background-image: url('');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* --- Gaya untuk Kontainer Otentikasi (Login/Register) --- */
+.auth-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Kontainer khusus untuk login Telegram */
+#telegram-login-container {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Kartu utama dengan efek "glassmorphism" */
+.container {
+    background: var(--glass-background);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+    border: 1px solid var(--glass-border);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.login-logo-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border: 2px solid var(--glass-border);
+    background-color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Grup input untuk email/password */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: .9em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    background: var(--input-background);
+    color: var(--text-color);
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+}
+
+/* --- Gaya Tombol (Buttons) --- */
+.button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 700;
+    transition: background-color .3s ease, transform .2s ease;
+}
+
+.button.primary {
+    background: #007bff; /* DIUBAH: Menjadi warna biru solid */
+color: #fff;
+box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); /* Menambah bayangan biru agar lebih hidup */
+}
+
+.button.primary:hover {
+    opacity: .9;
+    transform: translateY(-2px);
+}
+
+.button.google {
+    background-color: #fff;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.button.google:hover {
+    background-color: #f0f0f0;
+}
+
+.button.google img {
+    width: 60px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.button.secondary {
+    background: var(--glass-background); /* DITAMBAHKAN: Latar belakang kaca gelap */
+border: 1px solid var(--glass-border);
+color: #ffffff; /* DIUBAH: Warna teks menjadi putih solid */
+margin-top: 15px;
+text-align: flex; /* Menambah perataan teks agar rapi dengan ikon */
+padding-left: 20px; /* Memberi ruang untuk ikon di sebelah kiri */
+}
+
+.button.secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.button:disabled {
+    background: #444 !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    opacity: .7 !important;
+    box-shadow: none !important;
+}
+
+/* Link untuk beralih antara login dan register */
+.switch-link {
+    display: block;
+    margin-top: 20px;
+    font-size: .9em;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: color .3s ease;
+}
+
+.switch-link:hover {
+    color: var(--primary-purple);
+}
+
+/* --- Gaya Pop-up dan Overlay --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup {
+    background: var(--glass-background);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    max-width: 90%;
+    width: 350px;
+    text-align: center;
+    position: relative;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform .3s ease, opacity .3s ease;
+    box-sizing: border-box;
+}
+
+.overlay.active .popup {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.popup-header {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+    font-size: .95em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.popup-actions .button {
+    margin-top: 10px;
+}
+
+/* --- Gaya Kontainer Dashboard Utama --- */
+.dashboard-container {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+/* Header di Dashboard */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: var(--glass-background);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.header .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.header .user-info .profile-pic {
+    width: 40px;
+    height: 40px;
+    background-color: var(--light-purple);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.header .user-info .details p {
+    margin: 0;
+    font-size: .9em;
+}
+
+.header .user-info .details .username {
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.header .user-info .details .coins {
+    font-size: .8em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.header .notification-icon {
+    position: relative;
+    font-size: 1.5em;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--danger-red);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+/* --- Gaya Daftar Game --- */
+.game-list {
+    width: 110%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 5px;
+    margin-bottom: 20px;
+    justify-content: center;
+    padding: 0 5px;
+}
+
+.game-item {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.game-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.game-item img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.game-item h3 {
+    font-size: .9em;
+    margin: 0 0 3px;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-item p {
+    font-size: .75em;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.game-item .reward {
+    font-weight: 700;
+    color: var(--success-green);
+}
+
+.game-item .duration {
+    font-size: .7em;
+    color: var(--warning-orange);
+    margin-top: 3px;
+}
+
+/* --- Gaya Kontainer Iklan Slider --- */
+/* --- Gaya Kontainer Iklan Slider (Diperbarui) --- */
+.ads-container {
+width: 100vw; /* Lebar 100% dari viewport width */
+height: 200px; /* Anda bisa sesuaikan tinggi slider di sini */
+margin-bottom: 20px;
+position: relative;
+overflow: hidden;
+display: flex;
+justify-content: center;
+align-items: center;
+box-sizing: border-box;
+/* Trik untuk menghilangkan celah akibat padding dari parent */
+margin-left: -20px;
+margin-right: -20px;
+}
+
+        
+.ad-slider-inner {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform .5s ease-in-out;
+}
+
+.ad-banner-slide {
+min-width: 100%;
+flex-shrink: 0;
+height: 100%;
+background-color: #2a2a2a; /* Warna jaga-jaga jika gambar gagal dimuat */
+position: relative;
+border-radius: 10px;
+overflow: hidden;
+/* Properti penting untuk menampilkan gambar */
+background-size: cover; /* Membuat gambar menutupi seluruh area slide */
+background-position: center; /* Posisi gambar di tengah */
+  border: 0.5px solid #e0e0e0; /*Garis tipis berwarna abu-abu terang */
+  box-sizing: border-box;
+}
+.ad-banner-slide iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.slider-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-80%);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 20;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: background-color .3s ease;
+}
+
+.slider-nav-button:hover {
+    display: hidden;
+}
+
+.slider-nav-button.prev { left: 0; }
+.slider-nav-button.next { right: 0; }
+
+.slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color .3s ease, transform .2s ease;
+}
+
+.dot.active {
+    background: var(--primary-purple);
+    transform: scale(1.2);
+}
+
+/* --- Gaya Navigasi Bawah --- */
+/* --- Gaya Navigasi Bawah --- */
+.bottom-nav {
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+background: #ffffff;
+border-top: 1px solid #e0e0e0;
+display: flex;
+justify-content: space-around;
+/* align-items ditambahkan/diubah */
+align-items: flex-end; 
+padding: 10px 0;
+box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08); 
+z-index: 100;
+display: none; 
+height: 70px; /* Memberi tinggi agar tombol tengah tidak terpotong */
+}
+
+.nav-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+color: #888888; /* Warna ikon dan teks diubah menjadi abu-abu gelap */
+font-size: .8em;
+cursor: pointer;
+transition: color .3s ease;
+width: 20%;
+}
+
+.nav-item i {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.nav-item.active {
+    color: var(--primary-purple);
+}
+  /* --- Gaya untuk Tombol Navigasi Tengah --- */
+.nav-item-center {
+position: relative; /* Diperlukan untuk menaikkan posisi tombol */
+width: 65px;
+height: 65px;
+background: linear-gradient(145deg, #007bff, #0056b3);
+border-radius: 50%; /* Membuat bentuk lingkaran */
+border: 3px solid white;
+display: flex;
+justify-content: center;
+align-items: center;
+color: white; /* Warna ikon menjadi putih */
+cursor: pointer;
+box-shadow: 0 -4px 15px rgba(0, 91, 179, 0.4);
+/* Menaikkan posisi tombol ke atas */
+transform: translateY(-25px); 
+transition: transform 0.3s ease;
+}
+
+.nav-item-center:hover {
+transform: translateY(-30px); /* Efek saat disentuh/hover */
+}
+
+.nav-item-center i {
+font-size: 2em; /* Ukuran ikon gamepad */
+margin: 0;
+}
+
+/* --- Gaya Iframe Game --- */
+.game-iframe-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+}
+
+.game-iframe-wrapper iframe {
+    width: 100%;
+    height: calc(100% - 50px);
+    border: none;
+}
+
+.game-iframe-header {
+    width: 100%;
+    height: 30px;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    box-sizing: border-box;
+    color: #fff;
+    z-index: 1001;
+}
+
+.game-iframe-header button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.game-iframe-header span {
+    font-weight: 700;
+}
+
+/* --- Gaya Halaman/Kontainer Fitur (Tugas, Profil, dll) --- */
+.text-purple-600 { color: #d3d3d3; }
+.text-pink-500 { color: #0000ff; }
+.bg-gradient-to-r.from-purple-600.to-pink-500 { background: linear-gradient(to right, #d3d3d3, #0000ff); }
+
+.container-feature {
+    display: none;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 80px;
+    padding-top: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+.container-feature main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+}
+
+.feature-inner-card {
+    
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 450px;
+    width: 95%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+/* Gaya Tugas Lainnya */
+.other-tasks-container {
+    margin-top: 24px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.task-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.task-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 12px;
+    object-fit: cover;
+    background-color: #333;
+}
+
+.task-details { flex-grow: 1; }
+.task-details p { margin: 0; }
+.task-title { font-weight: 600; color: white; }
+.task-reward { font-size: .85em; color: var(--success-green); }
+.task-arrow { font-size: 1.5em; color: var(--success-green); }
+
+/* Gaya Kartu Statistik di Profil */
+.profile-stat-card {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);;
+    border-radius: 12px;
+    padding: 24px;
+    width: 95%;
+    max-width: 450px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-stat-card .grid {
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.profile-stat-card .grid>div {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Gaya Check-in Harian --- */
+.checkin-day-item {
+    position: relative;
+}
+
+.checkin-day-item .checkbox-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1.2em;
+    color: #28a745;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+.checkin-day-item.checked .checkbox-icon {
+    display: block;
+}
+
+/* Sembunyikan kontainer otentikasi awal */
+#auth-container, #login-form, #register-form {
+    display: none;
+}
+
+/* --- Gaya Riwayat Transaksi --- */
+.history-list {
+    width: 100%;
+    max-width: 450px;
+    padding: 0 10px;
+}
+
+.history-item {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.history-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.history-icon.credit { background-color: rgba(40, 167, 69, 0.2); color: var(--success-green); }
+.history-icon.debit { background-color: rgba(220, 53, 69, 0.2); color: var(--danger-red); }
+.history-details { flex-grow: 1; }
+.history-description { font-weight: 600; color: white; margin: 0; }
+.history-date { font-size: 0.8em; color: rgba(255, 255, 255, 0.6); margin: 2px 0 0; }
+.history-amount { font-weight: 700; font-size: 1.1em; }
+.history-amount.credit { color: var(--success-green); }
+.history-amount.debit { color: var(--danger-red); }
+
+/* --- Gaya Skeleton Loader (untuk efek memuat) --- */
+.skeleton-loader {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.skeleton-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    margin-right: 15px;
+    animation: pulse 1.5s infinite;
+}
+
+.skeleton-text {
+    height: 1em;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    animation: pulse 1.5s infinite;
+}
+
+.skeleton-text.short { width: 40%; }
+.skeleton-text.long { width: 80%; margin-bottom: 5px; }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* --- Gaya Papan Peringkat (Leaderboard) --- */
+.leaderboard-tabs {
+    display: flex;
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.leaderboard-tab {
+    flex-grow: 1;
+    padding: 10px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-tab.active {
+    background: var(--primary-purple);
+    color: white;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+}
+
+.leaderboard-list {
+    
+    width: 100%;
+    max-width: 450px;
+    
+    flex-grow: 1;
+}
+
+.leaderboard-item {
+    display: flex;
+align-items: center;
+background: rgba(0, 0, 0, 0.2);
+border-radius: 12px;
+padding: 10px 15px;
+margin-bottom: 10px;
+border-left: 5px solid transparent;
+transition: all 0.3s ease;
+border: 1px solid var(--glass-border); /* DITAMBAHKAN: Garis tipis transparan */
+}
+  /* --- Gaya untuk Podium Leaderboard --- */
+/* --- Gaya untuk Podium Leaderboard (VERSI BARU DENGAN <img>) --- */
+#podium-container {
+position: relative; /* Ini wajib agar posisi user bisa diatur di dalamnya */
+width: 100%;
+max-width: 380px; /* Sedikit dilebarkan agar tidak terlalu sempit */
+margin: 0 auto 0px;
+/* Semua properti background kita hapus dari sini */
+}
+
+/* Style untuk gambar podium itu sendiri */
+#podium-container img.podium-image {
+width: 100%; /* Membuat gambar podium memenuhi lebar container */
+height: auto; /* Tinggi akan menyesuaikan secara otomatis */
+display: block; /* Menghilangkan spasi ekstra di bawah gambar */
+}
+
+.podium-user {
+position: absolute; /* Posisi user akan diatur relatif terhadap container */
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+width: 80px; 
+transition: transform 0.2s ease;
+}
+.podium-user:hover {
+transform: scale(1.05); /* Sedikit efek zoom saat disentuh */
+}
+
+.podium-user .leaderboard-user-pic {
+width: 60px;
+height: 60px;
+font-size: 1.5em;
+border: 3px solid white;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.podium-user .leaderboard-username {
+font-size: 0.9em;
+font-weight: 700;
+margin-top: 8px;
+color: white;
+text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.podium-user .leaderboard-score {
+font-size: 0.8em;
+color: var(--rank-gold);
+}
+
+
+/* -- POSISI BARU MENGGUNAKAN PERSENTASE -- */
+
+/* Posisi Peringkat 1 (Tengah Atas) */
+.podium-rank-1 {
+top: 18%;  /* 5% dari atas container */
+left: 50%;
+transform: translateX(-50%);
+}
+.podium-rank-1 .leaderboard-user-pic {
+border-color: var(--rank-gold);
+}
+
+/* Posisi Peringkat 2 (Kanan) */
+.podium-rank-2 {
+top: 28%; /* 28% dari atas container */
+right: 15%; /* 10% dari kanan container */
+}
+.podium-rank-2 .leaderboard-user-pic {
+border-color: var(--rank-silver);
+}
+
+/* Posisi Peringkat 3 (Kiri) */
+.podium-rank-3 {
+top: 38%; /* 35% dari atas container */
+left: 15%;  /* 10% dari kiri container */
+}
+.podium-rank-3 .podium-user .leaderboard-user-pic {
+border-color: var(--rank-bronze);
+}
+
+.leaderboard-item.rank-1 { 
+  border-left-color: var(--rank-gold); 
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%); }
+.leaderboard-item.rank-2 { 
+  border-left-color: var(--rank-silver);
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%); }
+.leaderboard-item.rank-3 { 
+  border-left-color: var(--rank-bronze); 
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%); }
+
+.leaderboard-rank {
+  font-size: 1.2em; font-weight: 700;
+  width: 40px; text-align: center; margin-right: 10px; }
+.leaderboard-item.rank-1 .leaderboard-rank {
+  color: var(--rank-gold); }
+.leaderboard-item.rank-2 .leaderboard-rank {
+  color: var(--rank-silver); }
+.leaderboard-item.rank-3 .leaderboard-rank { 
+  color: var(--rank-bronze); }
+
+.leaderboard-user-pic { width: 40px; height: 40px; border-radius: 50%; background: #333; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold; }
+.leaderboard-details { flex-grow: 1; }
+.leaderboard-username { font-weight: 600; color: white; }
+.leaderboard-score { font-size: 0.9em; color: var(--success-green); }
+.leaderboard-item .fa-trophy { margin-left: auto; font-size: 1.5em; }
+
+.current-user-rank {
+    position: sticky;
+    bottom: 70px;
+    width: 100%;
+    max-width: 450px;
+    padding: 10px;
+    background: linear-gradient(to right, var(--primary-purple), #ff69b4);
+    border-radius: 12px;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+    z-index: 50;
+    margin-top: auto;
+}
+
+/* --- Gaya untuk Galeri Pencapaian --- */
+.achievement-gallery {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.achievement-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.achievement-badge {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.achievement-badge i {
+    font-size: 1.6em;
+    color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.achievement-badge.unlocked {
+    background: var(--primary-purple);
+    border-color: var(--rank-gold);
+    box-shadow: 0 0 15px var(--primary-purple);
+}
+
+.achievement-badge.unlocked i {
+    color: white;
+    text-shadow: 0 0 10px var(--rank-gold);
+}
+
+.achievement-title { font-size: 0.7em; font-weight: 600; margin: 0; line-height: 1.2; }
+.achievement-description { font-size: 0.6em; color: #a0aec0; margin: 0; line-height: 1.3; }
+
+/* Popup Pencapaian Terbuka */
+#achievement-unlocked-popup .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#achievement-unlocked-popup .unlocked-badge-icon {
+    font-size: 5em;
+    color: var(--rank-gold);
+    margin-bottom: 15px;
+    animation: tada 1s;
+}
+
+@keyframes tada {
+    0% { transform: scale(1); }
+    10%, 20% { transform: scale(0.9) rotate(-3deg); }
+    30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+    40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+/* --- Gaya untuk Kartu Referal --- */
+#referral-card {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 10px 20px;
+    width: 95%;
+    
+    max-width: 450px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.referral-code-wrapper {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px dashed var(--glass-border);
+    text-align: center;
+    margin-top: 12px;
+}
+
+.referral-code-wrapper p { margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 0.9em; }
+.referral-code-wrapper h3 { margin: 5px 0 0 0; color: var(--rank-gold); font-size: 1.5em; letter-spacing: 2px; }
+#referral-popup .popup-content input {
+    width: 100%;
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* --- Gaya untuk Riwayat Penarikan & Status --- */
+.withdrawal-item {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.withdrawal-item-header {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ 
+.withdrawal-item-details { flex-grow: 1; }
+.withdrawal-item-amount { font-size: 1.1em; font-weight: 700; color: white; }
+.withdrawal-item-method { font-size: 0.9em; color: rgba(255, 255, 255, 0.8); }
+.withdrawal-item-footer { display: flex; justify-content: space-between; align-items: center; }
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending { background-color: var(--warning-orange); color: black; }
+.status-approved { background-color: var(--success-green); color: white; }
+.status-rejected { background-color: var(--danger-red); color: white; 
+  }
+      /* --- Gaya untuk Halaman Withdraw Baru --- */
+.withdraw-page-container {
+width: 100%;
+max-width: 450px;
+display: flex;
+flex-direction: column;
+gap: 25px; /* Jarak antar elemen: kartu, form, catatan, riwayat */
+}
+
+/* Kartu ATM/Kredit Visual */
+.credit-card-widget {
+width: 100%;
+padding-top: 56.25%; /* Ini trik untuk rasio 16:9 seperti kartu */
+position: relative;
+border-radius: 15px;
+background: linear-gradient(45deg, #007bff, #0056b3);
+color: white;
+box-shadow: 0 10px 25px rgba(0, 91, 179, 0.3);
+overflow: hidden;
+}
+
+.credit-card-content {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+padding: 20px;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.card-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+}
+
+.card-header .bank-name {
+font-size: 1.2em;
+font-weight: 700;
+}
+
+.card-header .card-chip {
+width: 50px;
+height: 40px;
+background: #FFD700;
+border-radius: 5px;
+}
+
+.card-body .account-number {
+font-size: 1.2em;
+font-family: 'Courier New', Courier, monospace; /* Font khas nomor kartu */
+letter-spacing: 3px;
+margin-bottom: 5px;
+text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+text-align: center; /* DITAMBAHKAN: Membuat posisi teks ke tengah */
+}
+
+.card-body .balance {
+font-size: 1em;
+font-weight: 600;
+}
+  .card-chip {
+width: 45px;
+height: 35px;
+border-radius: 5px;
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: white; /* Diubah dari kuning menjadi putih agar logo jelas */
+padding: 5px;
+box-sizing: border-box;
+}
+
+.card-chip .payment-logo {
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
+}
+  /* Penyesuaian padding khusus untuk kartu di halaman withdraw */
+
+
+
+/* Form Penarikan Baru */
+.withdraw-form .input-group {
+margin: 0;
+}
+.withdraw-form .input-group input {
+background: var(--input-background);
+border: 1px solid var(--input-border);
+color: white;
+text-align: center;
+font-size: 1.2em;
+padding: 15px;
+border-radius: 12px;
+}
+.withdraw-form .button.primary {
+margin-top: 15px;
+padding: 15px;
+font-size: 1.2em;
+border-radius: 12px;
+}
+
+/* Catatan dan Riwayat */
+.withdraw-notes, .withdraw-history-section {
+width: 100%;
+text-align: left;
+}
+
+.withdraw-notes ul {
+font-size: 0.8em;
+color: #a0aec0;
+list-style-position: inside;
+}
+
+.withdraw-history-section h2 {
+font-size: 1.2em;
+font-weight: 700;
+margin-bottom: 15px;
+}
+  .withdraw-page-container {
+background: var(--glass-background); /* Menggunakan variabel kaca gelap utama kita */
+border: 1px solid var(--glass-border);
+border-radius: 20px; /* Sudut melengkung yang lebih besar agar serasi */
+padding: 20px;
+box-sizing: border-box;
+}
+
+/* --- Gaya untuk XP Bar --- */
+.progress-bar-container {
+    
+    width: 80%;
+    max-width: md;
+    margin-bottom: 24px;
+}
+
+.xp-bar {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    height: 10px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+}
+
+.xp-bar-inner {
+    background: linear-gradient(to right, var(--primary-purple), #ff69b4);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s ease-in-out;
+}
+
+/* --- Gaya untuk Offerwall --- */
+.offer-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid var(--glass-border);
+}
+
+.offer-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background-color: #333;
+}
+
+.offer-details { flex-grow: 1; }
+.offer-title { font-weight: 700; font-size: 1.1em; color: white; }
+.offer-description { font-size: 0.9em; color: rgba(255, 255, 255, 0.7); margin: 4px 0; }
+.offer-reward { font-size: 1em; font-weight: bold; color: var(--rank-gold); }
+.offer-button { padding: 8px 16px; background: var(--success-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+.offer-button:hover { background-color: #218838; }
+.offer-button:disabled { background-color: #555; cursor: not-allowed; }
+
+/* --- Aturan Media Query untuk Responsivitas --- */
+@media (min-width: 768px) {
+    body { justify-content: center; }
+    .container { margin: auto; }
+    .dashboard-container,
+    .container-feature {
+        margin: 0 auto;
+        max-width: 450px;
+    }
+    .bottom-nav {
+        max-width: 450px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+  
+
+/* ====================================================================== */
+/* STYLESHEET UNTUK HEADER BARU (VERSI FINAL)    */
+/* ====================================================================== */
+.header-baru {
+width: 110%;
+background-color: #007bff; /*warna biru bos*/
+border-radius: 15px;
+padding: 12px 15px;
+color: white;
+margin-bottom: 20px;
+box-shadow: 0 4px 12px rgba(0, 86, 179, 0.25);
+box-sizing: border-box;
+display: flex;
+flex-direction: column;
+gap: 10px; /* Jarak antar baris disesuaikan */
+}
+
+.header-baru-baris-atas,
+.header-baru-baris-bawah {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.header-baru-avatar i {
+font-size: 2.5em;
+}
+
+.header-baru-notif {
+position: relative; /* Penting untuk lencana notifikasi */
+cursor: pointer;
+}
+
+.header-baru-notif i {
+font-size: 2.2em; /* Menyesuaikan ukuran ikon lonceng */
+text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Style untuk lencana notifikasi di header baru */
+#notif-badge-header-baru {
+position: absolute;
+top: 0;
+right: -2px;
+background-color: var(--danger-red);
+color: white;
+border-radius: 50%;
+width: 18px;
+height: 18px;
+font-size: 0.7rem;
+font-weight: bold;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid white; /* Menambah border agar lebih terlihat */
+display: none; /* Disembunyikan secara default */
+}
+
+.header-baru-username {
+flex-grow: 1;
+text-align: center;
+font-size: 1.10em;
+font-weight: 700;
+}
+
+.header-baru-baris-bawah {
+padding: 0 5px;
+justify-content: space-around;
+}
+
+/* Ini adalah style untuk membuat efek "blok" */
+.header-baru-stat {
+background-color: rgba(0, 0, 0, 0.2); /* Latar belakang transparan gelap */
+padding: 6px 14px; /* Padding di dalam blok */
+border-radius: 10px; /* Sudut melengkung untuk blok */
+font-size: 0.85em;
+font-weight: 600;
+text-align: center;
+}
+
+.header-baru-stat .label {
+opacity: 0.85;
+margin-right: 6px;
+}
