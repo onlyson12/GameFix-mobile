@@ -16,16 +16,38 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+// ===============================================================
+//                  MODIFIKASI KODE IKLAN
+// ===============================================================
+
+let adShownForSession = false; // Flag untuk memastikan iklan hanya muncul sekali
+
+function showInterstitialAd() {
+    if (adShownForSession) return; // Jika iklan sudah tampil, jangan jalankan lagi
+
+    console.log("Menampilkan iklan interstisial...");
+    try {
+        // Ini adalah isi dari script iklan Anda yang sudah kita bungkus
+        (function(d,z,s){
+            s.src='https://'+d+'/401/'+z;
+            try {(document.body||document.documentElement).appendChild(s)}catch(e){}
+        })('groleegni.net', 9519732, document.createElement('script'));
+
+        adShownForSession = true; // Tandai bahwa iklan sudah berhasil ditampilkan
+    } catch (error) {
+        console.error("Gagal menampilkan iklan:", error);
+    }
+}
+
 
 // ===============================================================
 //                    URL IKLAN FOTO
 // ===============================================================
-
-// Kumpulan URL script iklan yang akan ditampilkan di slider.
+        
 // Kumpulan URL gambar untuk ditampilkan di slider.
 const imageUrls = [
-// Ganti URL ini dengan URL gambar Anda (sebaiknya landscape)
-
+    // Ganti URL ini dengan URL gambar Anda (sebaiknya landscape)
+    
 "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnP-flqz9LQSZZo2fFoik25VjA0buRN4oC0SJNoebs0uleQWJa8PhxsGp8eI4XsMIlQRHSWzsXQqZkd0bNxtX0mahq_D3BokyYxlML2AW-53Kn1sOjCDUgqe2XMrDUp2AjHj9YUh1lVMmrzzsRtEU61DziDhJOrWEmTntdvMXzDQymM3n2Uy_ZNnTZzGM/s1600/1751363891-picsay3.jpg",
 
 
@@ -40,15 +62,6 @@ const imageUrls = [
   
   
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTm9ydGF96KjKdUQsGv708eD91TOuf0We4n4ZGkKTJ3Ze3Z2vCNacTlboU&s=10", 
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
     // Tambahkan URL gambar lainnya di sini...
 ];
@@ -137,6 +150,7 @@ function initializeTelegramLogin() {
             const userId = tgUser.id.toString();
             const referredByCode = tg.initDataUnsafe.start_param || null;
             startUserSession(userId, { type: 'telegram', data: tgUser }, referredByCode);
+            showInterstitialAd(); // PANGGIL IKLAN SAAT MASUK DARI TELEGRAM
         } else {
             handleAccessDenied("Gagal mendapatkan ID Pengguna dari Telegram.");
         }
@@ -158,6 +172,7 @@ function initializeBrowserLogin() {
         if (user) {
             // Jika ada pengguna yang login, mulai sesi.
             startUserSession(user.uid, { type: 'browser', data: user });
+            showInterstitialAd(); // PANGGIL IKLAN SAAT AUTO LOGIN
         } else {
             // Jika tidak ada, hentikan sesi.
             stopUserSession();
@@ -214,6 +229,7 @@ function stopUserSession() {
     unsubscribeNotif = null;
     currentLoggedInUserKey = null;
     users = {};
+    adShownForSession = false; // Reset flag iklan saat logout
     
     // Kembali ke halaman otentikasi.
     showSection('auth-container');
@@ -266,16 +282,16 @@ async function handleUserSnapshot(doc, authInfo, referredByCode = null) {
             newUser.telegram_username = authInfo.data.username || null;
         } else {
             // Ambil username yang disimpan sementara
-const pendingUsername = localStorage.getItem('pendingUsername');
+            const pendingUsername = localStorage.getItem('pendingUsername');
 
-// Prioritaskan username dari form, baru fallback ke yg lain
-newUser.username = pendingUsername || authInfo.data.displayName || 'Pengguna Baru';
-newUser.email = authInfo.data.email;
+            // Prioritaskan username dari form, baru fallback ke yg lain
+            newUser.username = pendingUsername || authInfo.data.displayName || 'Pengguna Baru';
+            newUser.email = authInfo.data.email;
 
-// Setelah digunakan, hapus data sementara agar bersih
-if (pendingUsername) {
-    localStorage.removeItem('pendingUsername');
-}
+            // Setelah digunakan, hapus data sementara agar bersih
+            if (pendingUsername) {
+                localStorage.removeItem('pendingUsername');
+            }
         }
 
         await db.collection('users').doc(currentLoggedInUserKey).set(newUser);
@@ -294,11 +310,10 @@ if (pendingUsername) {
     const userData = doc.data();
     users[currentLoggedInUserKey] = userData;
     
-    // === PERUBAHAN DI SINI ===
     // Cek apakah akun diblokir.
     if (userData.isBanned) {
         showBanScreen();
-        return; // Pastikan ada 'return' di sini untuk berhenti.
+        return;
     }
     // =========================
 
@@ -786,27 +801,27 @@ function updateAllViews() {
  * Memperbarui tampilan dashboard (username dan koin).
  */
 function updateDashboardView() {
-// --- Kode untuk Header Lama (Biarkan saja jika ingin sebagai cadangan) ---
-const usernameEl = document.getElementById("dashboardUsername");
-const coinsEl = document.getElementById("dashboardCoins");
-if (usernameEl && coinsEl && currentLoggedInUserKey && users[currentLoggedInUserKey]) {
-const user = users[currentLoggedInUserKey];
-usernameEl.textContent = user.username;
-coinsEl.textContent = `Pendapatan : Rp.${(user.coins || 0).toLocaleString()}`;
-}
+    // --- Kode untuk Header Lama (Biarkan saja jika ingin sebagai cadangan) ---
+    const usernameEl = document.getElementById("dashboardUsername");
+    const coinsEl = document.getElementById("dashboardCoins");
+    if (usernameEl && coinsEl && currentLoggedInUserKey && users[currentLoggedInUserKey]) {
+        const user = users[currentLoggedInUserKey];
+        usernameEl.textContent = user.username;
+        coinsEl.textContent = `Pendapatan : Rp.${(user.coins || 0).toLocaleString()}`;
+    }
 
-// --- Kode untuk Header Baru ---
-const headerBaruUsernameEl = document.getElementById("headerBaruUsername");
-const headerBaruLevelEl = document.getElementById("headerBaruLevel");
-const headerBaruCoinsEl = document.getElementById("headerBaruCoins");
-if (headerBaruUsernameEl && headerBaruLevelEl && headerBaruCoinsEl && currentLoggedInUserKey && users[currentLoggedInUserKey]) {
-const user = users[currentLoggedInUserKey];
-headerBaruUsernameEl.textContent = user.username;
-headerBaruLevelEl.textContent = `Lv. ${user.level || 1}`;
-headerBaruCoinsEl.textContent = `Rp.${(user.coins || 0).toLocaleString()}`;
+    // --- Kode untuk Header Baru ---
+    const headerBaruUsernameEl = document.getElementById("headerBaruUsername");
+    const headerBaruLevelEl = document.getElementById("headerBaruLevel");
+    const headerBaruCoinsEl = document.getElementById("headerBaruCoins");
+    if (headerBaruUsernameEl && headerBaruLevelEl && headerBaruCoinsEl && currentLoggedInUserKey && users[currentLoggedInUserKey]) {
+        const user = users[currentLoggedInUserKey];
+        headerBaruUsernameEl.textContent = user.username;
+        headerBaruLevelEl.textContent = `Lv. ${user.level || 1}`;
+        headerBaruCoinsEl.textContent = `Rp.${(user.coins || 0).toLocaleString()}`;
+    }
 }
-}
-
+        
 /**
  * Memperbarui tampilan halaman profil.
  */
@@ -883,72 +898,72 @@ function updateProfileView() {
  * Memperbarui tampilan halaman penarikan.
  */
 function updateTarikView() {
-const user = users[currentLoggedInUserKey];
-if (!user) return;
-
-const tarikContainer = document.getElementById('tarik-content-container');
-const minWd = globalSettings.minimumWithdrawal || 5000;
-
-if (user.paymentMethod && user.paymentNumber) {
-// Tampilan jika metode pembayaran sudah diatur (DESAIN BARU)
-const formattedNumber = user.paymentNumber.replace(/(.{4})/g, '$1 ').trim(); // Memformat nomor
-
-tarikContainer.innerHTML = `
-<div class="withdraw-page-container">
-<div class="credit-card-widget">
-    <div class="credit-card-content">
-        <div class="card-header">
-            <span class="bank-name">${user.paymentMethod.toUpperCase()}</span>
-            <div class="card-chip">
-                ${getPaymentLogo(user.paymentMethod)}
-            </div>
-        </div>
-        <div class="card-body">
-                    <div class="account-number">${formattedNumber}</div>
-                    <div class="balance">Saldo Anda: Rp.${user.coins.toLocaleString()}</div>
+    const user = users[currentLoggedInUserKey];
+    if (!user) return;
+    
+    const tarikContainer = document.getElementById('tarik-content-container');
+    const minWd = globalSettings.minimumWithdrawal || 5000;
+    
+    if (user.paymentMethod && user.paymentNumber) {
+        // Tampilan jika metode pembayaran sudah diatur (DESAIN BARU)
+        const formattedNumber = user.paymentNumber.replace(/(.{4})/g, '$1 ').trim(); // Memformat nomor
+        
+        tarikContainer.innerHTML = `
+        <div class="withdraw-page-container">
+    <div class="credit-card-widget">
+        <div class="credit-card-content">
+            <div class="card-header">
+                <span class="bank-name">${user.paymentMethod.toUpperCase()}</span>
+                <div class="card-chip">
+                    ${getPaymentLogo(user.paymentMethod)}
                 </div>
             </div>
-        </div>
-
-        <form class="withdraw-form" onsubmit="event.preventDefault(); submitWithdrawal();">
-            <div class="input-group">
-                <input class="w-full" id="amount" placeholder="Min. Rp.${minWd.toLocaleString()}" type="number" min="${minWd}">
-            </div>
-            <button class="button primary w-full" type="submit">Ajukan Penarikan</button>
-        </form>
-
-        <div class="withdraw-notes">
-            <p class="font-semibold text-gray-300">Catatan:</p>
-            <ul>
-                <li>Proses penarikan 1-3 hari kerja</li>
-                <li>Pastikan data tujuan penarikan sudah benar</li>
-            </ul>
-        </div>
-
-        <div class="withdraw-history-section">
-            <h2>Riwayat Penarikan Terbaru</h2>
-            <div id="withdraw-history-on-page" class="history-list w-full">
+            <div class="card-body">
+                        <div class="account-number">${formattedNumber}</div>
+                        <div class="balance">Saldo Anda: Rp.${user.coins.toLocaleString()}</div>
+                    </div>
                 </div>
-        </div>
-    </div>
-    `;
-    // Panggil fungsi untuk mengisi riwayat penarikan ke container baru
-    updateWithdrawalHistoryView('withdraw-history-on-page');
-
-} else {
-    // Tampilan jika metode pembayaran belum diatur (tetap sama).
-    tarikContainer.innerHTML = `
-        <section class="w-full">
-            <div class="text-center p-6 rounded-2xl" style="background-color: #2e2c44;">
-                <i class="fas fa-wallet text-5xl text-purple-400 mb-4"></i>
-                <h2 class="text-white font-semibold text-xl mb-2">Atur Tujuan Penarikan</h2>
-                <p class="text-gray-400 mb-6">Anda perlu mengatur metode penarikan di halaman Profil.</p>
-                <button class="button primary w-full" onclick="showSection('profil-container')">Pergi ke Profil</button>
             </div>
-        </section>`;
-}
-}
 
+            <form class="withdraw-form" onsubmit="event.preventDefault(); submitWithdrawal();">
+                <div class="input-group">
+                    <input class="w-full" id="amount" placeholder="Min. Rp.${minWd.toLocaleString()}" type="number" min="${minWd}">
+                </div>
+                <button class="button primary w-full" type="submit">Ajukan Penarikan</button>
+            </form>
+
+            <div class="withdraw-notes">
+                <p class="font-semibold text-gray-300">Catatan:</p>
+                <ul>
+                    <li>Proses penarikan 1-3 hari kerja</li>
+                    <li>Pastikan data tujuan penarikan sudah benar</li>
+                </ul>
+            </div>
+
+            <div class="withdraw-history-section">
+                <h2>Riwayat Penarikan Terbaru</h2>
+                <div id="withdraw-history-on-page" class="history-list w-full">
+                    </div>
+            </div>
+        </div>
+        `;
+        // Panggil fungsi untuk mengisi riwayat penarikan ke container baru
+        updateWithdrawalHistoryView('withdraw-history-on-page');
+
+    } else {
+        // Tampilan jika metode pembayaran belum diatur (tetap sama).
+        tarikContainer.innerHTML = `
+            <section class="w-full">
+                <div class="text-center p-6 rounded-2xl" style="background-color: #2e2c44;">
+                    <i class="fas fa-wallet text-5xl text-purple-400 mb-4"></i>
+                    <h2 class="text-white font-semibold text-xl mb-2">Atur Tujuan Penarikan</h2>
+                    <p class="text-gray-400 mb-6">Anda perlu mengatur metode penarikan di halaman Profil.</p>
+                    <button class="button primary w-full" onclick="showSection('profil-container')">Pergi ke Profil</button>
+                </div>
+            </section>`;
+    }
+}
+        
 /**
  * Memperbarui tampilan kartu check-in harian.
  */
@@ -1010,7 +1025,7 @@ function updateCheckinView() {
          }
     }
 }
-
+        
 /**
  * Memuat dan menampilkan daftar game dari Firestore.
  */
@@ -1122,152 +1137,141 @@ async function updateHistoryView() {
 /**
  * Memperbarui tampilan riwayat penarikan.
  */
-// VERSI BARU - BISA MENERIMA ID CONTAINER
 async function updateWithdrawalHistoryView(containerId = 'withdrawal-history-list-container') {
-if (!currentLoggedInUserKey) return;
-const container = document.getElementById(containerId);
-// Cek apakah container ditemukan
-if (!container) {
-    console.error(`Container riwayat dengan ID '${containerId}' tidak ditemukan.`);
-    return;
-}
-
-container.innerHTML = Array(3).fill('<div class="skeleton-loader">...</div>').join('');
-try {
-    const snapshot = await db.collection('withdrawals').where('userId', '==', currentLoggedInUserKey).orderBy('timestamp', 'desc').limit(5).get(); // Dibatasi 5 riwayat terbaru
-    if (snapshot.empty) {
-        container.innerHTML = `<p class="text-center text-gray-400 mt-4">Belum ada riwayat penarikan.</p>`;
+    if (!currentLoggedInUserKey) return;
+    const container = document.getElementById(containerId);
+    // Cek apakah container ditemukan
+    if (!container) {
+        console.error(`Container riwayat dengan ID '${containerId}' tidak ditemukan.`);
         return;
     }
-    let historyHtml = '';
-    snapshot.forEach(doc => {
-        const wd = doc.data();
-        const status = wd.status || 'Pending';
-        const statusClass = `status-${status.toLowerCase()}`;
-        const date = wd.timestamp ? new Date(wd.timestamp.seconds * 1000).toLocaleString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) : 'Baru saja';
-        historyHtml += `
-            <div class="history-item withdrawal-item">
-                <div class="withdrawal-item-header">
-                    <span class="withdrawal-item-amount">Rp.${wd.amount.toLocaleString()}</span>
-                    <span class="status-badge ${statusClass}">${status}</span>
-                </div>
-                <div class="withdrawal-item-footer">
-                    <span class="withdrawal-item-method">${wd.paymentMethod.toUpperCase()}</span>
-                    <span class="history-date">${date}</span>
-                </div>
-            </div>`;
-    });
-    container.innerHTML = historyHtml;
-} catch (error) {
-    console.error("Gagal memuat riwayat penarikan:", error);
-    container.innerHTML = `<p class="text-center text-red-500 mt-4">Gagal memuat riwayat.</p>`;
-}
+    
+    container.innerHTML = Array(3).fill('<div class="skeleton-loader">...</div>').join('');
+    try {
+        const snapshot = await db.collection('withdrawals').where('userId', '==', currentLoggedInUserKey).orderBy('timestamp', 'desc').limit(5).get(); // Dibatasi 5 riwayat terbaru
+        if (snapshot.empty) {
+            container.innerHTML = `<p class="text-center text-gray-400 mt-4">Belum ada riwayat penarikan.</p>`;
+            return;
+        }
+        let historyHtml = '';
+        snapshot.forEach(doc => {
+            const wd = doc.data();
+            const status = wd.status || 'Pending';
+            const statusClass = `status-${status.toLowerCase()}`;
+            const date = wd.timestamp ? new Date(wd.timestamp.seconds * 1000).toLocaleString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) : 'Baru saja';
+            historyHtml += `
+                <div class="history-item withdrawal-item">
+                    <div class="withdrawal-item-header">
+                        <span class="withdrawal-item-amount">Rp.${wd.amount.toLocaleString()}</span>
+                        <span class="status-badge ${statusClass}">${status}</span>
+                    </div>
+                    <div class="withdrawal-item-footer">
+                        <span class="withdrawal-item-method">${wd.paymentMethod.toUpperCase()}</span>
+                        <span class="history-date">${date}</span>
+                    </div>
+                </div>`;
+        });
+        container.innerHTML = historyHtml;
+    } catch (error) {
+        console.error("Gagal memuat riwayat penarikan:", error);
+        container.innerHTML = `<p class="text-center text-red-500 mt-4">Gagal memuat riwayat.</p>`;
+    }
 }
 
 /**
  * Memperbarui tampilan papan peringkat.
  * @param {string} type - Tipe peringkat (dailyEarned, weeklyEarned, totalCoinsEarned).
  */
-  // ================================================================= //
-// SALIN SEMUA KODE DI DALAM BLOK INI DENGAN TELITI                   //
-// ================================================================= //
-
-// GANTI SELURUH FUNGSI INI DENGAN YANG BARU
 async function updateLeaderboardView(type) {
-const podiumContainer = document.getElementById('podium-container');
-const listContainer = document.getElementById('leaderboard-list-container');
-const userRankContainer = document.getElementById('current-user-rank-container');
+    const podiumContainer = document.getElementById('podium-container');
+    const listContainer = document.getElementById('leaderboard-list-container');
+    const userRankContainer = document.getElementById('current-user-rank-container');
+    
+    // URL Gambar podium Anda. Taruh di sini agar mudah diganti.
+    const podiumImageUrl = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi7CU5N-W16bxlHlBvYmg7LeFFavowj4hK8UCg-BTugu-QwtauzcoUPxMx8ls4VZd6I5rfO1q_nVxU0rAsabHn257-5MRfjkbOauLQKrvJDdPcOAMqdXQyLmBXcnDfMyN3HabOiWwUaV6wZYWP_Ls6XBw2zKBRfSGFXuTQUfmhdRZ0ehWnj5t3eb3sBuqI/s1600/20250627_133120.png'; 
 
-// URL Gambar podium Anda. Taruh di sini agar mudah diganti.
-const podiumImageUrl = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi7CU5N-W16bxlHlBvYmg7LeFFavowj4hK8UCg-BTugu-QwtauzcoUPxMx8ls4VZd6I5rfO1q_nVxU0rAsabHn257-5MRfjkbOauLQKrvJDdPcOAMqdXQyLmBXcnDfMyN3HabOiWwUaV6wZYWP_Ls6XBw2zKBRfSGFXuTQUfmhdRZ0ehWnj5t3eb3sBuqI/s1600/20250627_133120.png'; 
-
-if (!podiumContainer || !listContainer) {
-    console.error("Elemen #podium-container atau #leaderboard-list-container tidak ditemukan di HTML!");
-    return;
-}
-
-podiumContainer.innerHTML = '<div style="height: 200px; display:flex; justify-content:center; align-items:center;"><p class="text-gray-400">Memuat Peringkat...</p></div>';
-listContainer.innerHTML = Array(7).fill('<div class="skeleton-loader">...</div>').join('');
-if (userRankContainer) userRankContainer.style.display = 'none';
-
-try {
-    const query = db.collection('users').orderBy(type, 'desc').limit(100);
-    const snapshot = await query.get();
-
-    if (snapshot.empty) {
-        podiumContainer.innerHTML = `<img src="${podiumImageUrl}" class="podium-image" alt="Podium Kosong"><div style="position:absolute; top:40%; left:50%; transform:translateX(-50%); color:white; text-align:center;">Belum ada Peringkat</div>`;
-        listContainer.innerHTML = '';
+    if (!podiumContainer || !listContainer) {
+        console.error("Elemen #podium-container atau #leaderboard-list-container tidak ditemukan di HTML!");
         return;
     }
 
-    let podiumUsersHtml = '';
-    let listHtml = '';
-    // ... (sisa kode deklarasi variabel userRank, userFound sama seperti sebelumnya) ...
-    let userRank = -1;
-    let userFound = false;
+    podiumContainer.innerHTML = '<div style="height: 200px; display:flex; justify-content:center; align-items:center;"><p class="text-gray-400">Memuat Peringkat...</p></div>';
+    listContainer.innerHTML = Array(7).fill('<div class="skeleton-loader">...</div>').join('');
+    if (userRankContainer) userRankContainer.style.display = 'none';
 
-    snapshot.docs.forEach((doc, index) => {
-        const rank = index + 1;
-        const userData = { id: doc.id, ...doc.data() };
-        const score = userData[type] || 0;
-        const userPicInitial = (userData.username || 'U').charAt(0).toUpperCase();
+    try {
+        const query = db.collection('users').orderBy(type, 'desc').limit(100);
+        const snapshot = await query.get();
 
-        if (rank >= 1 && rank <= 3) {
-            podiumUsersHtml += `
-                <div class="podium-user podium-rank-${rank}">
-                    <div class="leaderboard-user-pic">${userPicInitial}</div>
-                    <p class="leaderboard-username">${userData.username}</p>
-                    <p class="leaderboard-score">Rp.${score.toLocaleString()}</p>
-                </div>
-            `;
-        } else {
-            listHtml += `
-                <div class="leaderboard-item">
-                    <span class="leaderboard-rank">#${rank}</span>
-                    <div class="leaderboard-user-pic">${userPicInitial}</div>
-                    <div class="leaderboard-details">
+        if (snapshot.empty) {
+            podiumContainer.innerHTML = `<img src="${podiumImageUrl}" class="podium-image" alt="Podium Kosong"><div style="position:absolute; top:40%; left:50%; transform:translateX(-50%); color:white; text-align:center;">Belum ada Peringkat</div>`;
+            listContainer.innerHTML = '';
+            return;
+        }
+
+        let podiumUsersHtml = '';
+        let listHtml = '';
+        let userRank = -1;
+        let userFound = false;
+
+        snapshot.docs.forEach((doc, index) => {
+            const rank = index + 1;
+            const userData = { id: doc.id, ...doc.data() };
+            const score = userData[type] || 0;
+            const userPicInitial = (userData.username || 'U').charAt(0).toUpperCase();
+
+            if (rank >= 1 && rank <= 3) {
+                podiumUsersHtml += `
+                    <div class="podium-user podium-rank-${rank}">
+                        <div class="leaderboard-user-pic">${userPicInitial}</div>
                         <p class="leaderboard-username">${userData.username}</p>
                         <p class="leaderboard-score">Rp.${score.toLocaleString()}</p>
                     </div>
-                </div>`;
-        }
+                `;
+            } else {
+                listHtml += `
+                    <div class="leaderboard-item">
+                        <span class="leaderboard-rank">#${rank}</span>
+                        <div class="leaderboard-user-pic">${userPicInitial}</div>
+                        <div class="leaderboard-details">
+                            <p class="leaderboard-username">${userData.username}</p>
+                            <p class="leaderboard-score">Rp.${score.toLocaleString()}</p>
+                        </div>
+                    </div>`;
+            }
 
-        if (userRankContainer && userData.id === currentLoggedInUserKey) {
-            userRank = rank;
-            userFound = true;
-            userRankContainer.innerHTML = `
-                <div class="flex items-center">
-                    <span class="leaderboard-rank font-bold">#${userRank}</span>
-                    <div class="leaderboard-details text-left">
-                        <p class="leaderboard-username font-bold">Peringkat Anda</p>
-                        <p class="leaderboard-score font-bold text-white">Rp.${score.toLocaleString()}</p>
-                    </div>
-                </div>`;
+            if (userRankContainer && userData.id === currentLoggedInUserKey) {
+                userRank = rank;
+                userFound = true;
+                userRankContainer.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="leaderboard-rank font-bold">#${userRank}</span>
+                        <div class="leaderboard-details text-left">
+                            <p class="leaderboard-username font-bold">Peringkat Anda</p>
+                            <p class="leaderboard-score font-bold text-white">Rp.${score.toLocaleString()}</p>
+                        </div>
+                    </div>`;
+                userRankContainer.style.display = 'block';
+            }
+        });
+
+        // Gabungkan gambar podium DENGAN profil user
+        podiumContainer.innerHTML = `
+            <img src="${podiumImageUrl}" class="podium-image" alt="Podium Peringkat">
+            ${podiumUsersHtml}
+        `;
+        listContainer.innerHTML = listHtml;
+
+        if (userRankContainer && !userFound) {
+            userRankContainer.innerHTML = `<p class="text-center font-semibold">Anda belum masuk peringkat.</p>`;
             userRankContainer.style.display = 'block';
         }
-    });
-
-    // Gabungkan gambar podium DENGAN profil user
-    podiumContainer.innerHTML = `
-        <img src="${podiumImageUrl}" class="podium-image" alt="Podium Peringkat">
-        ${podiumUsersHtml}
-    `;
-    listContainer.innerHTML = listHtml;
-
-    if (userRankContainer && !userFound) {
-        userRankContainer.innerHTML = `<p class="text-center font-semibold">Anda belum masuk peringkat.</p>`;
-        userRankContainer.style.display = 'block';
+    } catch (error) {
+        console.error(`Gagal memuat papan peringkat (${type}):`, error);
+        podiumContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Gagal memuat peringkat.</p>`;
+        listContainer.innerHTML = '';
     }
-} catch (error) {
-    console.error(`Gagal memuat papan peringkat (${type}):`, error);
-    podiumContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Gagal memuat peringkat.</p>`;
-    listContainer.innerHTML = '';
 }
-}
-// ================================================================= //
-// AKHIR DARI BLOK KODE YANG PERLU DISALIN                            //
-// ================================================================= //
-
 
 // ===============================================================
 //                         FUNGSI OTENTIKASI
@@ -1285,41 +1289,32 @@ function toggleAuthForms() {
     }
 }
 
-// GANTI DENGAN VERSI INI
 function handleEmailRegister() {
-const username = document.getElementById('registerUsername').value.trim();
-const email = document.getElementById('registerEmail').value.trim();
-const password = document.getElementById('registerPassword').value;
-const referralCode = document.getElementById('registerReferralCode').value.trim(); 
+    const username = document.getElementById('registerUsername').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const referralCode = document.getElementById('registerReferralCode').value.trim(); 
 
-if (!username || !email || password.length < 6) {
-    return customAlert("Error", "Mohon isi semua field dengan benar. Password minimal 6 karakter.");
-}
+    if (!username || !email || password.length < 6) {
+        return customAlert("Error", "Mohon isi semua field dengan benar. Password minimal 6 karakter.");
+    }
 
-// ==========================================================
-// BARIS BARU: Simpan username sementara sebelum membuat akun
-// ==========================================================
-localStorage.setItem('pendingUsername', username);
-// ==========================================================
+    localStorage.setItem('pendingUsername', username);
 
-auth.createUserWithEmailAndPassword(email, password)
-    .then(userCredential => {
-        const newUser = userCredential.user;
-        if (referralCode) {
-            localStorage.setItem('pendingReferralCode', referralCode);
-        }
-        // Perintah untuk update profile tetap dijalankan sebagai pelengkap
-        return newUser.updateProfile({ displayName: username });
-    })
-    .then(() => {
-        // Proses dilanjutkan oleh onAuthStateChanged
-    })
-    .catch(error => {
-        // Jika gagal, hapus semua data sementara
-        localStorage.removeItem('pendingReferralCode');
-        localStorage.removeItem('pendingUsername');
-        customAlert("Gagal Mendaftar", error.message);
-    });
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const newUser = userCredential.user;
+            if (referralCode) {
+                localStorage.setItem('pendingReferralCode', referralCode);
+            }
+            showInterstitialAd(); // PANGGIL IKLAN SAAT DAFTAR
+            return newUser.updateProfile({ displayName: username });
+        })
+        .catch(error => {
+            localStorage.removeItem('pendingReferralCode');
+            localStorage.removeItem('pendingUsername');
+            customAlert("Gagal Mendaftar", error.message);
+        });
 }
 
 function handleEmailLogin() {
@@ -1329,6 +1324,9 @@ function handleEmailLogin() {
         return customAlert("Error", "Mohon isi email dan password.");
     }
     auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            showInterstitialAd(); // PANGGIL IKLAN SAAT LOGIN
+        })
         .catch(error => {
             customAlert("Gagal Masuk", error.message);
         });
@@ -1337,6 +1335,9 @@ function handleEmailLogin() {
 function handleGoogleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
+        .then(() => {
+            showInterstitialAd(); // PANGGIL IKLAN SAAT LOGIN DENGAN GOOGLE
+        })
         .catch(error => {
             customAlert("Gagal Masuk dengan Google", error.message);
         });
@@ -1351,7 +1352,7 @@ function handleLogout() {
 // ===============================================================
 //                          FUNGSI GAME
 // ===============================================================
-
+        
 function initializeGameItems() {
     document.querySelectorAll(".game-item").forEach(item => {
         item.onclick = function() {
@@ -1410,7 +1411,7 @@ function updateTimerDisplay() {
         timerEl.textContent = `${minutes}:${seconds}`;
     }
 }
-
+        
 function closeGameIframe() {
     if (isGamePlaying && gameTimeRemaining > 0) {
         customConfirm("Reward tidak akan diberikan jika keluar sebelum waktunya. Tetap keluar?", forceCloseGameIframe);
@@ -1465,7 +1466,7 @@ function setupEventListeners() {
         closeCustomConfirm();
     };
 }
-
+        
 function confirmDeleteData() {
     customConfirm("Anda yakin ingin menghapus semua data Anda? Tindakan ini tidak dapat diurungkan.", async function() {
         if (currentLoggedInUserKey) {
@@ -1483,7 +1484,7 @@ function confirmDeleteData() {
         }
     });
 }
-
+        
 function openPaymentSetupPopup() {
     const user = users[currentLoggedInUserKey];
     if (!user) return;
@@ -1518,7 +1519,7 @@ function switchLeaderboardTab(tabElement, type) {
     currentLeaderboardType = type;
     updateLeaderboardView(type);
 }
-
+        
 function showReferralPopup() {
     const user = users[currentLoggedInUserKey];
     if (!user || !user.referralCode) return;
@@ -1541,36 +1542,36 @@ function copyReferralLink() {
         customAlert('Error', 'Gagal menyalin link.');
     }
 }
-
+        
 // --- Fungsi-fungsi untuk Slider Gambar ---
 function initializeSlider() {
-const sliderInner = document.getElementById("adSliderInner");
-const dotsContainer = document.getElementById("sliderDots");
+    const sliderInner = document.getElementById("adSliderInner");
+    const dotsContainer = document.getElementById("sliderDots");
 
-// Kosongkan konten slider yang mungkin ada sebelumnya
-sliderInner.innerHTML = '';
-dotsContainer.innerHTML = '';
+    // Kosongkan konten slider yang mungkin ada sebelumnya
+    sliderInner.innerHTML = '';
+    dotsContainer.innerHTML = '';
 
-if (imageUrls.length === 0) return; // Jangan lakukan apa-apa jika tidak ada URL gambar
+    if (imageUrls.length === 0) return; // Jangan lakukan apa-apa jika tidak ada URL gambar
 
-// Buat setiap slide dan dot secara dinamis
-imageUrls.forEach((url, index) => {
-    // Buat elemen slide
-    const slide = document.createElement("div");
-    slide.classList.add("ad-banner-slide");
-    slide.style.backgroundImage = `url('${url}')`; // Set gambar sebagai background
-    sliderInner.appendChild(slide);
+    // Buat setiap slide dan dot secara dinamis
+    imageUrls.forEach((url, index) => {
+        // Buat elemen slide
+        const slide = document.createElement("div");
+        slide.classList.add("ad-banner-slide");
+        slide.style.backgroundImage = `url('${url}')`; // Set gambar sebagai background
+        sliderInner.appendChild(slide);
 
-    // Buat elemen dot
-    const dot = document.createElement("span");
-    dot.classList.add("dot");
-    dot.setAttribute("data-slide-index", index);
-    dot.onclick = () => goToSlide(index);
-    dotsContainer.appendChild(dot);
-});
+        // Buat elemen dot
+        const dot = document.createElement("span");
+        dot.classList.add("dot");
+        dot.setAttribute("data-slide-index", index);
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
 
-showSlide(currentSlide);
-startAutoSlide();
+    showSlide(currentSlide);
+    startAutoSlide();
 }
 
 function loadBannerAd(containerId) {
@@ -1619,7 +1620,7 @@ function moveSlide(n) { stopAutoSlide(); showSlide(currentSlide + n); startAutoS
 function goToSlide(n) { stopAutoSlide(); showSlide(n); startAutoSlide(); }
 function startAutoSlide() { stopAutoSlide(); sliderInterval = setInterval(() => { showSlide(currentSlide + 1); }, autoSlideInterval); }
 function stopAutoSlide() { clearInterval(sliderInterval); }
-
+        
 // --- Fungsi-fungsi untuk Overlay & Popup ---
 function showMaintenanceScreen() {
     // Daftar ID dari semua container/halaman utama aplikasi
@@ -1675,7 +1676,7 @@ function showAchievementUnlockedPopup(achievement) { document.getElementById('un
 function closeAchievementUnlockedPopup() { document.getElementById('achievement-unlocked-popup').classList.remove('active'); }
 function showAnnouncementPopup(message) { document.getElementById('announcement-message').textContent = message; document.getElementById('announcement-popup-overlay').classList.add('active'); sessionStorage.setItem('announcement_shown', 'true'); }
 function closeAnnouncementPopup() { document.getElementById('announcement-popup-overlay').classList.remove('active'); }
-
+        
 async function showNotificationPopup() {
     const container = document.getElementById('notification-list');
     container.innerHTML = '<p class="text-center">Memuat notifikasi...</p>';
@@ -1702,30 +1703,26 @@ async function showNotificationPopup() {
         container.innerHTML = '<p class="text-center text-red-500">Gagal memuat notifikasi.</p>';
     }
 }
-
+        
 function closeNotificationPopup() {
     document.getElementById('notification-popup-overlay').classList.remove('active');
 }
 
 // --- Fungsi-fungsi Listener dari Firestore ---
-// --- Fungsi-fungsi Listener dari Firestore ---
 function handleGlobalSettings(doc) {
     if (doc.exists) {
         globalSettings = doc.data();
 
-        // === PERUBAHAN DI SINI ===
         if (globalSettings.maintenance) {
             showMaintenanceScreen();
-            return; // <-- Tambahkan ini untuk menghentikan eksekusi
+            return;
         }
-        // =========================
-
+        
         if (globalSettings.announcement && sessionStorage.getItem('announcement_shown') !== 'true') {
             showAnnouncementPopup(globalSettings.announcement);
         }
         if (currentLoggedInUserKey) {
             db.collection('users').doc(currentLoggedInUserKey).get().then(userDoc => {
-                // Cek lagi setelah data user didapat, untuk memastikan
                 if (userDoc.exists) handleUserSnapshot(userDoc, { type: 'existing' });
             });
         }
@@ -1733,30 +1730,30 @@ function handleGlobalSettings(doc) {
 }
 
 function handleNotificationSnapshot(snapshot) {
-// Ambil elemen lencana notifikasi yang lama dan yang baru
-const notifBadgeOld = document.getElementById('notif-badge');
-const notifBadgeNew = document.getElementById('notif-badge-header-baru');
+    // Ambil elemen lencana notifikasi yang lama dan yang baru
+    const notifBadgeOld = document.getElementById('notif-badge');
+    const notifBadgeNew = document.getElementById('notif-badge-header-baru');
 
-const updateBadge = (badgeElement) => {
-    if (badgeElement) { // Cek apakah elemen ada
-        if (snapshot.size > 0) {
-            badgeElement.style.display = 'flex';
-            badgeElement.textContent = snapshot.size;
-        } else {
-            badgeElement.style.display = 'none';
+    const updateBadge = (badgeElement) => {
+        if (badgeElement) { // Cek apakah elemen ada
+            if (snapshot.size > 0) {
+                badgeElement.style.display = 'flex';
+                badgeElement.textContent = snapshot.size;
+            } else {
+                badgeElement.style.display = 'none';
+            }
         }
-    }
-};
+    };
 
-// Perbarui kedua lencana
-updateBadge(notifBadgeOld);
-updateBadge(notifBadgeNew);
+    // Perbarui kedua lencana
+    updateBadge(notifBadgeOld);
+    updateBadge(notifBadgeNew);
 }
-
+        
 // ===============================================================
 //               FUNGSI-FUNGSI UTILITAS & PEMBANTU
 // ===============================================================
-
+        
 /**
  * Mencatat transaksi (kredit/debit) ke koleksi 'transactions'.
  * @param {string} description - Deskripsi transaksi.
@@ -1822,80 +1819,74 @@ function getPaymentLogoUrl(methodName) {
         default: return "https://placehold.co/60x40/fff/000?text=?";
     }
 }
-  function getPaymentLogo(paymentMethod) {
-let logoUrl = '';
-// Ganti URL placeholder di bawah ini dengan URL gambar Anda yang sebenarnya.
-switch (paymentMethod.toLowerCase()) {
-    case 'dana':
-        logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/2560px-Logo_dana_blue.svg.png'; 
-        break;
-    case 'pulsa':
-        logoUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmCNPZm8x5w26-P7hnx3b2wa4d8NJ_kD_low&usqp=CAU'; // Ganti dengan URL logo Pulsa Anda
-        break;
-    case 'bca':
-        logoUrl = 'https://buatlogoonline.com/wp-content/uploads/2022/10/Logo-BCA-PNG.png'; // Ganti dengan URL logo BCA Anda
-        break;
-    case 'bri':
-        logoUrl = 'https://buatlogoonline.com/wp-content/uploads/2022/10/Logo-Bank-BRI.png'; // Ganti dengan URL logo BRI Anda
-        break;
-    case 'mandiri':
-        logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/2560px-Bank_Mandiri_logo_2016.svg.png'; // Ganti dengan URL logo Mandiri Anda
-        break;
-    default:
-        return ''; 
+      
+function getPaymentLogo(paymentMethod) {
+    let logoUrl = '';
+    // Ganti URL placeholder di bawah ini dengan URL gambar Anda yang sebenarnya.
+    switch (paymentMethod.toLowerCase()) {
+        case 'dana':
+            logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/2560px-Logo_dana_blue.svg.png'; 
+            break;
+        case 'pulsa':
+            logoUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmCNPZm8x5w26-P7hnx3b2wa4d8NJ_kD_low&usqp=CAU'; // Ganti dengan URL logo Pulsa Anda
+            break;
+        case 'bca':
+            logoUrl = 'https://buatlogoonline.com/wp-content/uploads/2022/10/Logo-BCA-PNG.png'; // Ganti dengan URL logo BCA Anda
+            break;
+        case 'bri':
+            logoUrl = 'https://buatlogoonline.com/wp-content/uploads/2022/10/Logo-Bank-BRI.png'; // Ganti dengan URL logo BRI Anda
+            break;
+        case 'mandiri':
+            logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/2560px-Bank_Mandiri_logo_2016.svg.png'; // Ganti dengan URL logo Mandiri Anda
+            break;
+        default:
+            return ''; 
+    }
+    return `<img src="${logoUrl}" alt="${paymentMethod}" class="payment-logo">`;
 }
-return `<img src="${logoUrl}" alt="${paymentMethod}" class="payment-logo">`;
-}
-  // GANTI FUNGSI LAMA ANDA DENGAN VERSI GABUNGAN YANG LEBIH LENGKAP INI
+      
 function bagikanUndangan() {
-// 1. Ambil data pengguna (Logika ini sama seperti milik Anda)
-const user = users[currentLoggedInUserKey];
-if (!user || !user.referralCode) {
-    customAlert("Error", "Kode referral Anda tidak dapat ditemukan. Coba muat ulang.");
-    return;
-}
+    // 1. Ambil data pengguna (Logika ini sama seperti milik Anda)
+    const user = users[currentLoggedInUserKey];
+    if (!user || !user.referralCode) {
+        customAlert("Error", "Kode referral Anda tidak dapat ditemukan. Coba muat ulang.");
+        return;
+    }
 
-// =================================================================
-// LANGKAH BARU: Siapkan pesan & link yang berbeda untuk setiap mode
-// =================================================================
-let linkUntukDibagikan;
-let pesanUntukDibagikan;
+    let linkUntukDibagikan;
+    let pesanUntukDibagikan;
 
-if (isTelegramMode) {
-    // Jika di Telegram, siapkan link bot
-    linkUntukDibagikan = `https://t.me/gamefixpro_bot?start=${user.referralCode}`;
-    pesanUntukDibagikan = `Hai! Ayo gabung dan main di GameFix Pro untuk dapat hadiah. Jangan lupa pakai link ini ya!`;
-} else {
-    // Jika di Aplikasi/Browser, siapkan link download dan pesan dengan kode
-    linkUntukDibagikan = `https://gamefix.netlify.app/`;
-    pesanUntukDibagikan = `Ayo main GameFix Pro! Download aplikasinya di link ini dan jangan lupa masukkan kode referalku:  "${user.referralCode}"  saat daftar untuk dapat bonus!`;
-}
-// =================================================================
+    if (isTelegramMode) {
+        // Jika di Telegram, siapkan link bot
+        linkUntukDibagikan = `https://t.me/gamefixpro_bot?start=${user.referralCode}`;
+        pesanUntukDibagikan = `Hai! Ayo gabung dan main di GameFix Pro untuk dapat hadiah. Jangan lupa pakai link ini ya!`;
+    } else {
+        // Jika di Aplikasi/Browser, siapkan link download dan pesan dengan kode
+        linkUntukDibagikan = `https://gamefix.netlify.app/`;
+        pesanUntukDibagikan = `Ayo main GameFix Pro! Download aplikasinya di link ini dan jangan lupa masukkan kode referalku:  "${user.referralCode}"  saat daftar untuk dapat bonus!`;
+    }
+    
+    // Prioritas #1: Mencoba Web Share API
+    if (navigator.share) {
+        navigator.share({
+            title: 'Undangan Bergabung GameFix Pro',
+            text: pesanUntukDibagikan, 
+            url: linkUntukDibagikan,  
+        })
+        .then(() => console.log('Berhasil dibagikan via Web Share API.'))
+        .catch((error) => console.log('Gagal berbagi via Web Share API:', error));
+    
+    // Prioritas #2: Cadangan khusus jika di Telegram (misal untuk Android versi lama)
+    } else if (isTelegramMode) {
+        const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(linkUntukDibagikan)}&text=${encodeURIComponent(pesanUntukDibagikan)}`;
+        window.open(telegramShareUrl, '_blank');
 
-// 2. GUNAKAN STRUKTUR 3 PRIORITAS ANDA YANG SUDAH CANGGIH
-// Prioritas #1: Mencoba Web Share API
-if (navigator.share) {
-    navigator.share({
-        title: 'Undangan Bergabung GameFix Pro',
-        text: pesanUntukDibagikan, // <-- Menggunakan variabel pesan yang dinamis
-        url: linkUntukDibagikan,   // <-- Menggunakan variabel link yang dinamis
-    })
-    .then(() => console.log('Berhasil dibagikan via Web Share API.'))
-    .catch((error) => console.log('Gagal berbagi via Web Share API:', error));
-
-// Prioritas #2: Cadangan khusus jika di Telegram (misal untuk Android versi lama)
-} else if (isTelegramMode) {
-    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(linkUntukDibagikan)}&text=${encodeURIComponent(pesanUntukDibagikan)}`;
-    window.open(telegramShareUrl, '_blank');
-
-// Prioritas #3: Cadangan terakhir jika semua gagal (misal di browser PC)
-} else {
-    // Di versi aplikasi/browser, kita tidak lagi menampilkan popup link,
-    // tapi langsung menyalin pesan lengkapnya ke clipboard.
-    navigator.clipboard.writeText(`${pesanUntukDibagikan} \n\nDownload App: ${linkUntukDibagikan}`).then(() => {
-        customAlert("Berhasil Disalin!", "Pesan undangan sudah disalin. Silakan bagikan ke teman Anda.");
-    }).catch(err => {
-        customAlert("Gagal", "Gagal menyalin pesan undangan.");
-    });
-}
+    // Prioritas #3: Cadangan terakhir jika semua gagal (misal di browser PC)
+    } else {
+        navigator.clipboard.writeText(`${pesanUntukDibagikan} \n\nDownload App: ${linkUntukDibagikan}`).then(() => {
+            customAlert("Berhasil Disalin!", "Pesan undangan sudah disalin. Silakan bagikan ke teman Anda.");
+        }).catch(err => {
+            customAlert("Gagal", "Gagal menyalin pesan undangan.");
+        });
+    }
 }
