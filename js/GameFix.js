@@ -29,8 +29,7 @@ function showInterstitialAd() {
     try {
         // INI ADALAH KODE PEMICU IKLAN YANG BARU
         InterstitialTsAd({
-            spot: "98c52e8421eb4b93994b0c3e1b284c81",
-            countdown: 15
+            spot: "98c52e8421eb4b93994b0c3e1b284c81"
         });
 
         adShownForSession = true; 
