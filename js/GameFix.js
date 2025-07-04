@@ -23,19 +23,24 @@ const auth = firebase.auth();
 let adShownForSession = false; // Flag untuk memastikan iklan hanya muncul sekali
 
 function showInterstitialAd() {
-    if (adShownForSession) return; // Jika iklan sudah tampil, jangan jalankan lagi
+    if (adShownForSession) return; 
 
-    console.log("Menampilkan iklan interstisial...");
+    console.log("Menampilkan iklan interstisial BARU...");
     try {
-        // Ini adalah isi dari script iklan Anda yang sudah kita bungkus
-        (function(d,z,s){
-            s.src='https://'+d+'/401/'+z;
-            try {(document.body||document.documentElement).appendChild(s)}catch(e){}
-        })('groleegni.net', 9519732, document.createElement('script'));
+        // INI ADALAH KODE PEMICU IKLAN YANG BARU
+        InterstitialTsAd({
+            spot: "98c52e8421eb4b93994b0c3e1b284c81",
+            countdown: 15
+        });
 
-        adShownForSession = true; // Tandai bahwa iklan sudah berhasil ditampilkan
+        adShownForSession = true; 
     } catch (error) {
-        console.error("Gagal menampilkan iklan:", error);
+        // Cek jika error karena library belum termuat
+        if (typeof InterstitialTsAd === 'undefined') {
+            console.error("Error: Library iklan (interstitial.ts.js) sepertinya belum termuat.");
+        } else {
+            console.error("Gagal menampilkan iklan:", error);
+        }
     }
 }
 
